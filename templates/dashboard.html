@@ -13,143 +13,126 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-        }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h2 {
-            margin: 0;
-            font-weight: bold;
-        }
-        .alerts {
-            margin-bottom: 20px;
-        }
-        .alert-warning {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-        }
-        .btn-group-custom {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .section {
             background: white;
             padding: 20px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .section h3 {
+        h2 {
+            margin-bottom: 20px;
             color: #333;
+        }
+        h3 {
+            margin-top: 20px;
             margin-bottom: 15px;
-            font-weight: bold;
+            color: #333;
         }
         table {
-            width: 100%;
+            border: 1px solid #ddd;
             border-collapse: collapse;
+            margin-top: 10px;
         }
-        th {
-            background-color: #667eea;
-            color: white;
-            padding: 12px;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
         }
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
         }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        .form-inline {
+        form {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             align-items: flex-end;
         }
-        .form-inline input {
-            flex: 1;
-            min-width: 150px;
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
-        .form-inline button {
-            padding: 5px 15px;
-            white-space: nowrap;
+        button {
+            padding: 6px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 2px solid #ddd;
+        }
+        p {
+            margin: 5px 0;
+        }
+        .btn-success, .btn-danger {
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h2>🏥 {{session['company_name']}}</h2>
-            <a href="/" class="btn btn-light btn-sm">🚪 Chiqish</a>
-        </div>
+        <h2>🏥 {{session['company_name']}}</h2>
 
-        {% if alerts %}
-        <div class="alerts">
-            {% for a in alerts %}
-            <div class="alert alert-warning" role="alert">
-                {{a}}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+        {% for a in alerts %}
+        <p style="color:red">{{a}}</p>
+        {% endfor %}
 
-        <div class="btn-group-custom">
-            <a href="/excel" class="btn btn-success">📥 Excel</a>
-            <a href="/pdf" class="btn btn-danger">📄 PDF</a>
-        </div>
+        <a href="/excel" class="btn btn-success">📥 Excel</a>
+        <a href="/pdf" class="btn btn-danger">📄 PDF</a>
 
-        <div class="section">
-            <h3>➕ Dori qo'shish</h3>
-            <form action="/add" method="post" class="form-inline">
-                <input name="name" placeholder="Dori nomi" class="form-control" required>
-                <input name="qty" placeholder="Miqdor" class="form-control" type="number" required>
-                <input name="expiry" type="date" class="form-control" required>
-                <button type="submit" class="btn btn-primary">Qo'shish</button>
-            </form>
-        </div>
+        <hr>
 
-        <div class="section">
-            <h3>💊 Dorilar</h3>
-            {% if meds %}
-            <div class="table-responsive">
-                <table>
-                    <tr>
-                        <th>Dori</th>
-                        <th>Qoldiq</th>
-                        <th>Srogi</th>
-                        <th>Berish</th>
-                    </tr>
-                    {% for m in meds %}
-                    <tr>
-                        <td>{{m.name}}</td>
-                        <td>{{m.left_qty}}</td>
-                        <td>{{m.expiry_date}}</td>
-                        <td>
-                            <form action="/give" method="post" class="form-inline">
-                                <input type="hidden" name="med_id" value="{{m.id}}">
-                                <input name="qty" placeholder="soni" class="form-control" type="number" required style="min-width: 80px;">
-                                <input name="person" placeholder="kimga" class="form-control" required style="min-width: 100px;">
-                                <button type="submit" class="btn btn-sm btn-warning">Berish</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-            {% else %}
-            <p class="text-muted">Dorilar yo'q</p>
-            {% endif %}
-        </div>
+        <h3>➕ Dori qo'shish</h3>
+
+        <form action="/add" method="post">
+            <input name="name" placeholder="Dori">
+            <input name="qty" placeholder="Miqdor">
+            <input name="expiry" type="date">
+            <button>Qo'shish</button>
+        </form>
+
+        <hr>
+
+        <h3>💊 Dorilar</h3>
+
+        <table border="1" cellpadding="8">
+        <tr>
+        <th>Dori</th>
+        <th>Qoldiq</th>
+        <th>Srogi</th>
+        <th>Berish</th>
+        </tr>
+
+        {% for m in meds %}
+        <tr>
+        <td>{{m.name}}</td>
+        <td>{{m.left_qty}}</td>
+        <td>{{m.expiry_date}}</td>
+        <td>
+
+        <form action="/give" method="post">
+        <input type="hidden" name="med_id" value="{{m.id}}">
+        <input name="qty" placeholder="soni">
+        <input name="person" placeholder="kimga">
+        <button>Berish</button>
+        </form>
+
+        </td>
+        </tr>
+        {% endfor %}
+        </table>
     </div>
 </body>
 </html>
