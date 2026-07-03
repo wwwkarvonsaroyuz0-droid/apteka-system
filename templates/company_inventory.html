@@ -18,11 +18,14 @@
         <td>{{inv.loose_units}}</td>
         <td>{{inv.total_units}}</td>
         <td>
-          <form method="post" action="/use" class="d-inline">
-            <input type="hidden" name="inventory_id" value="{{inv.id}}">
-            <input type="hidden" name="company_id" value="{{company.id}}">
-            <button class="btn btn-sm btn-primary">Ishlatish</button>
-          </form>
+          <button class="btn btn-sm btn-primary use-btn" 
+                  data-inv-id="{{inv.id}}" 
+                  data-company-id="{{company.id}}"
+                  data-medicine-name="{{medicines[inv.medicine_id].name if inv.medicine_id in medicines else ''}}"
+                  data-units-per-box="{{inv.units_per_box}}"
+                  data-box-count="{{inv.box_count}}"
+                  data-loose-units="{{inv.loose_units}}"
+          >Ishlatish</button>
         </td>
       </tr>
     {% endfor %}
@@ -41,4 +44,88 @@
     {% endfor %}
   </tbody>
 </table>
+
+<!-- Use Modal -->
+<div class="modal fade" id="useModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="/use">
+        <div class="modal-header">
+          <h5 class="modal-title">Dorini ishlatish</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="inventory_id" id="modal_inventory_id">
+          <input type="hidden" name="company_id" id="modal_company_id" value="{{company.id}}">
+
+          <div class="mb-3">
+            <label class="form-label">Dori</label>
+            <input class="form-control" id="modal_medicine_name" name="medicine_name" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Qutilardan ishlatish (boxes)</label>
+            <input class="form-control" id="modal_boxes_used" name="boxes_used" type="number" value="0" min="0">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Dona birlik ishlatish (units)</label>
+            <input class="form-control" id="modal_units_used" name="units_used" type="number" value="0" min="0">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Bemor ismi</label>
+            <input class="form-control" id="modal_patient_name" name="patient_name" type="text">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Bemor ID (ixtiyoriy)</label>
+            <input class="form-control" id="modal_patient_id" name="patient_id" type="text">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Izoh</label>
+            <textarea class="form-control" id="modal_notes" name="notes"></textarea>
+          </div>
+
+          <div class="form-text text-muted">Agar inventory tanlanmasa, tizim avtomatik FEFO bo'yicha (muddati yaqin batchlardan) ishlatadi.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor</button>
+          <button type="submit" class="btn btn-primary">Tasdiqlash</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const useBtns = document.querySelectorAll('.use-btn');
+  const useModal = new bootstrap.Modal(document.getElementById('useModal'));
+  useBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const invId = btn.getAttribute('data-inv-id');
+      const companyId = btn.getAttribute('data-company-id');
+      const medName = btn.getAttribute('data-medicine-name');
+      const unitsPerBox = btn.getAttribute('data-units-per-box');
+      const boxCount = btn.getAttribute('data-box-count');
+      const looseUnits = btn.getAttribute('data-loose-units');
+
+      document.getElementById('modal_inventory_id').value = invId;
+      document.getElementById('modal_company_id').value = companyId;
+      document.getElementById('modal_medicine_name').value = medName;
+      document.getElementById('modal_boxes_used').value = 0;
+      document.getElementById('modal_units_used').value = 0;
+      document.getElementById('modal_patient_name').value = '';
+      document.getElementById('modal_patient_id').value = '';
+      document.getElementById('modal_notes').value = '';
+
+      useModal.show();
+    });
+  });
+});
+</script>
+
 {% endblock %}
