@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Ishlatish loglari ({{company.name}})</h3>
+<table class="table table-sm">
+  <thead><tr><th>Sana</th><th>Dori</th><th>Batch</th><th>Boxes used</th><th>Units used</th><th>Patient</th><th>User</th></tr></thead>
+  <tbody>
+    {% for l in logs %}
+      <tr>
+        <td>{{l.timestamp}}</td>
+        <td>{{l.medicine_id and (Medicine.query.get(l.medicine_id).name)}}</td>
+        <td>{{l.inventory_id}}</td>
+        <td>{{l.boxes_used}}</td>
+        <td>{{l.units_used}}</td>
+        <td>{{l.patient_name}}</td>
+        <td>{{l.user_id}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

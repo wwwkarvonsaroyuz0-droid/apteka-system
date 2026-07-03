@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Korxonalar</h2>
+<a class="btn btn-sm btn-primary mb-2" href="/companies/new">Yangi korxona</a>
+<table class="table table-sm">
+  <thead><tr><th>Id</th><th>Nomi</th><th>Harakat</th></tr></thead>
+  <tbody>
+    {% for c in companies %}
+      <tr>
+        <td>{{c.id}}</td>
+        <td>{{c.name}}</td>
+        <td><a class="btn btn-sm btn-secondary" href="/companies/{{c.id}}/inventory">Inventory</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

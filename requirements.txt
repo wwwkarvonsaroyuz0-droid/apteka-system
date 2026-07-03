@@ -3,3 +3,6 @@ pandas
 openpyxl
 reportlab
 gunicorn
+flask_sqlalchemy
+flask_login
+werkzeug

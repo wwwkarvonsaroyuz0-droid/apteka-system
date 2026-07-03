@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Yangi Inventory yozuvi ({{company.name}})</h3>
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Dori nomi</label>
+    <input class="form-control" name="medicine_name" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Batch raqami</label>
+    <input class="form-control" name="batch_number">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Quti soni</label>
+    <input class="form-control" name="box_count" type="number" value="0">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Har qutida dona</label>
+    <input class="form-control" name="units_per_box" type="number" value="10">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Loose dona</label>
+    <input class="form-control" name="loose_units" type="number" value="0">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Yaroqlilik (YYYY-MM-DD)</label>
+    <input class="form-control" name="expiry_date" type="date">
+  </div>
+  <button class="btn btn-primary">Qo'shish</button>
+</form>
+{% endblock %}

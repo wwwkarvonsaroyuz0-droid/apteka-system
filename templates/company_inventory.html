@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>{{company.name}} - Inventar</h3>
+<a class="btn btn-sm btn-success mb-2" href="/companies/{{company.id}}/inventory/new">Yangi batch qo'shish</a>
+<a class="btn btn-sm btn-info mb-2" href="/companies/{{company.id}}/logs">Ishlatish loglari</a>
+<table class="table table-sm">
+  <thead>
+    <tr><th>Dori</th><th>Batch</th><th>Sana</th><th>Qutilar</th><th>Har qutida</th><th>Qolgan dona</th><th>Jami dona</th><th>Harakat</th></tr>
+  </thead>
+  <tbody>
+    {% for inv in inventories %}
+      <tr>
+        <td>{{medicines[inv.medicine_id].name if inv.medicine_id in medicines else 'Noma'}}</td>
+        <td>{{inv.batch_number}}</td>
+        <td>{{inv.expiry_date}}</td>
+        <td>{{inv.box_count}}</td>
+        <td>{{inv.units_per_box}}</td>
+        <td>{{inv.loose_units}}</td>
+        <td>{{inv.total_units}}</td>
+        <td>
+          <form method="post" action="/use" class="d-inline">
+            <input type="hidden" name="inventory_id" value="{{inv.id}}">
+            <input type="hidden" name="company_id" value="{{company.id}}">
+            <button class="btn btn-sm btn-primary">Ishlatish</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<hr>
+<h5>Korxona bo'yicha jami dori</h5>
+<table class="table table-sm">
+  <thead><tr><th>Dori</th><th>Jami dona</th></tr></thead>
+  <tbody>
+    {% for mid, total in totals.items() %}
+      <tr>
+        <td>{{medicines[mid].name}}</td>
+        <td>{{total}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
